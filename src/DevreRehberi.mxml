@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark"
+							applicationDPI="160"
+							creationComplete="creationCompleteHandler(event)"
+							splashScreenImage="@Embed('assets/splash.png')">
+	<fx:Script>
+		<![CDATA[
+			import com.probertson.data.DBCopier;
+			
+			import entities.Kisi;
+			
+			import mx.events.FlexEvent;
+			
+			import nz.co.codec.flexorm.EntityManager;
+			
+			import views.DevreRehberiHomeView;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				var dbFile:File;
+				var dbFile2:File;
+				var encryptionKey:ByteArray;
+				var sqlConnection:SQLConnection;
+				var entityManager:EntityManager;
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("database/rehber-release.db");
+				if(!dbFile.exists){
+					dbFile2 = File.applicationDirectory.resolvePath("database/rehber-release.db");
+					dbFile2.copyTo(dbFile);
+					dbFile = File.applicationStorageDirectory.resolvePath("database/rehber-release.db");
+				}
+				encryptionKey = new ByteArray();
+				encryptionKey.writeUTFBytes("2009201020112012");
+				sqlConnection = new SQLConnection();
+				sqlConnection.open(dbFile, SQLMode.UPDATE, false, 1024, encryptionKey);
+				entityManager = EntityManager.getInstance();
+				entityManager.sqlConnection = sqlConnection;
+				navigator.replaceView(DevreRehberiHomeView);
+				
+				/*
+				var dbFile:File;
+				var dbFile2:File;
+				var encryptionKey:ByteArray;
+				dbFile = File.applicationDirectory.resolvePath("database/rehber.db");
+				dbFile2 = File.applicationDirectory.resolvePath("database/rehber-release.db");
+				
+				encryptionKey = new ByteArray();
+				encryptionKey.writeUTFBytes("2009201020112012");
+				var dbcp:DBCopier = new DBCopier(dbFile,dbFile2,encryptionKey);
+				dbcp.start(true);
+				trace("ok");
+				*/
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+</s:ViewNavigatorApplication>

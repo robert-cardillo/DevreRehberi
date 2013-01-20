@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.FlexGlobals;
+			import mx.events.ResizeEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			private var dict:Object = new Object();
+			
+			private var origin:ArrayCollection;
+			
+			[Bindable]
+			private var displayField:String;
+			
+			[Bindable]
+			private var indexDP:ArrayCollection;
+			
+			[Bindable]
+			private var listDP:ArrayCollection;
+			
+			public function show(data:ArrayCollection, labelField:String):IndexedSelectListPopUp
+			{
+				origin = data;
+				displayField = labelField;
+				init();
+				indexDP = new ArrayCollection(dict[''].keys);
+				listDP = origin;
+				
+				FlexGlobals.topLevelApplication.addEventListener(ResizeEvent.RESIZE, this_resizeHandler);
+				this_resizeHandler(null);
+				
+				return this;
+			}
+			
+			private function init():void
+			{
+				var root:String = '';
+				var pos:int = root.length;
+				var exists:Object = new Object();
+				dict[root] = {items:[],keys:[]};
+				for(var i:String in origin){
+					var key:String = origin[i][displayField].toString().substr(0, pos+1);
+					if(!exists[key]){
+						exists[key] = true;
+						(dict[root].keys as Array).push(key);
+					}
+					(dict[root].items as Array).push(i);
+				}
+			}
+			
+			private function buildDictForRoot(root:String):void
+			{
+				var pos:int = root.length;
+				var parent:String = root.substr(0,pos-1);
+				var exists:Object = new Object();
+				dict[root] = {items:[],keys:[]};
+				for each (var i:String in dict[parent].items){
+					var key:String = origin[i][displayField].toString().substr(0, pos+1);
+					if(key.substr(0,pos) != root){
+						continue;
+					}
+					if(!exists[key]){
+						exists[key] = true;
+						(dict[root].keys as Array).push(key);
+					}
+					(dict[root].items as Array).push(i);
+				}
+			}
+			
+			private function getItemsByIndex(index:Array):ArrayCollection
+			{
+				var dp:ArrayCollection = new ArrayCollection();
+				for each(var i:String in index){
+					dp.addItem(origin[i]);
+				}
+				return dp;
+			}
+			
+			private function showListForRoot(root:String):void
+			{
+				if(!dict[root]){
+					buildDictForRoot(root);
+				}
+				
+				listDP = getItemsByIndex(dict[root].items);
+				
+				indexDP = new ArrayCollection(dict[root].keys);
+			}
+			
+			protected function index_changeHandler(event:IndexChangeEvent):void
+			{
+				if(listDP.length > 1){
+					showListForRoot(index.selectedItem);
+				}
+			}
+			
+			protected function back_clickHandler(event:MouseEvent):void
+			{
+				var root:String = indexDP[0];
+				if(root.length > 1){
+					showListForRoot(root.substr(0,root.length-2));
+				}
+			}
+			
+			protected function list_changeHandler(event:IndexChangeEvent):void
+			{
+				FlexGlobals.topLevelApplication.removeEventListener(ResizeEvent.RESIZE, this_resizeHandler);
+				this.close(true, list.selectedItem);
+			}
+			
+			protected function cancelBtn_clickHandler(event:MouseEvent):void
+			{
+				FlexGlobals.topLevelApplication.removeEventListener(ResizeEvent.RESIZE, this_resizeHandler);
+				this.close(false);
+			}
+			
+			protected function this_resizeHandler(event:ResizeEvent):void
+			{
+				this.width = FlexGlobals.topLevelApplication.width - 40;
+				this.height = FlexGlobals.topLevelApplication.height - 20;
+				this.x = 20;
+				this.y = 10;
+				this.open(FlexGlobals.topLevelApplication.navigator.activeView, true);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:List id="index" left="0" top="50" bottom="0" width="75" change="index_changeHandler(event)" dataProvider="{indexDP}"></s:List>
+	<s:List id="list" left="80" right="0" top="50" bottom="0" labelField="{displayField}" change="list_changeHandler(event)" dataProvider="{listDP}"></s:List>
+	<s:Button x="0" y="0" width="75" label="&lt; Geri" click="back_clickHandler(event)"/>
+	<s:Button right="0" top="0" label="Vazgeç" click="cancelBtn_clickHandler(event)"/>
+
+</s:SkinnablePopUpContainer>

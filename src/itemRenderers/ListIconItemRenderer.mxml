@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark"
+					iconWidth="0" iconHeight="0"
+					labelFunction="{labelFunc}"
+					messageFunction="{msgFunc}">
+	<fx:Script>
+		<![CDATA[
+			import entities.Kisi;
+			
+			import mx.collections.ArrayCollection;
+			
+			public var queryFields:Array;
+			
+			private function labelFunc(data:Kisi):String
+			{
+				return data.adi + " " + data.soyadi + " (" + data.devresi + ") #" + data.ceptel;
+			}
+			
+			private function msgFunc(data:Kisi):String
+			{
+				return data.goryer + " / " + data.sube;
+			}
+		]]>
+	</fx:Script>
+</s:IconItemRenderer>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations version="1.0">
+
+	<metadata name="Id">
+		<context name="variable" />
+		<attribute name="strategy" values="assigned,uid,autoincrement" defaultValue="autoincrement" required="false"/>
+	</metadata>
+	
+	<metadata name="Table">
+		<context name="class" />		
+		
+		<attribute name="name" type="String" />
+		<attribute name="inheritsFrom" type="Class" values="Class, String"/>			
+	</metadata>
+	
+	<metadata name="Column">
+		<context name="variable" />		
+		
+		<attribute name="name" type="String" />		
+	</metadata>
+	
+	<metadata name="ManyToOne">
+		<context name="variable" />
+		
+		<attribute name="cascade" required="false" values="save-update,delete,all,none" defaultValue="save-update"/>
+		<attribute name="constrain"	required="false" defaultValue="true" type="Boolean"/>
+	</metadata>
+	
+	<metadata name="OneToMany">
+		<context name="variable" />
+		
+		<attribute name="type" type="Class"  required="true" />
+		<attribute name="cascade" required="false" values="save-update,delete,all,none" defaultValue="save-update"/>
+		<attribute name="constrain"	required="false" defaultValue="true" type="Boolean"/>
+		<attribute name="indexed" required="false" defaultValue="false" type="Boolean" />
+		<attribute name="lazy" type="Boolean" required="false" defaultValue="false"/>		
+	</metadata>
+	
+	<metadata name="ManyToMany">
+		<context name="variable" />
+		
+		<attribute name="type" type="Class"  required="true" />
+		<attribute name="cascade" required="false" values="save-update,delete,all,none" defaultValue="save-update"/>
+		<attribute name="constrain"	required="false" defaultValue="true" type="Boolean"/>
+		<attribute name="indexed" required="false" defaultValue="false" type="Boolean" />
+	</metadata>
+	
+	<metadata name="Transient">
+		<context name="variable" />
+	</metadata>
+	
+</annotations>
