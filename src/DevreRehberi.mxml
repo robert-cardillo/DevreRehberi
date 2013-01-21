@@ -2,21 +2,18 @@
 <s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							xmlns:s="library://ns.adobe.com/flex/spark"
 							applicationDPI="160"
-							creationComplete="creationCompleteHandler(event)"
-							splashScreenImage="@Embed('assets/splash.png')">
+							splashScreenImage="@Embed('assets/splash.png')"
+							initialize="initializeHandler(event)"
+							firstView="views.DevreRehberiHomeView">
 	<fx:Script>
 		<![CDATA[
-			import com.probertson.data.DBCopier;
-			
-			import entities.Kisi;
-			
 			import mx.events.FlexEvent;
 			
 			import nz.co.codec.flexorm.EntityManager;
 			
 			import views.DevreRehberiHomeView;
 			
-			protected function creationCompleteHandler(event:FlexEvent):void
+			protected function initializeHandler(event:FlexEvent):void
 			{
 				var dbFile:File;
 				var dbFile2:File;
@@ -36,7 +33,6 @@
 				sqlConnection.open(dbFile, SQLMode.UPDATE, false, 1024, encryptionKey);
 				entityManager = EntityManager.getInstance();
 				entityManager.sqlConnection = sqlConnection;
-				navigator.replaceView(DevreRehberiHomeView);
 				
 				/*
 				var dbFile:File;

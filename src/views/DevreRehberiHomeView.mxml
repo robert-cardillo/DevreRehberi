@@ -9,7 +9,6 @@
 			
 			import itemRenderers.ListIconItemRenderer;
 			
-			import mx.collections.ArrayCollection;
 			import mx.utils.StringUtil;
 			
 			import nz.co.codec.flexorm.EntityManager;
