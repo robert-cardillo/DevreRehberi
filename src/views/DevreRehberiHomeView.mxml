@@ -14,6 +14,7 @@
 			import nz.co.codec.flexorm.EntityManager;
 			import nz.co.codec.flexorm.criteria.Criteria;
 			
+			import spark.events.DropDownEvent;
 			import spark.events.PopUpEvent;
 			
 			import util.LookUps;
@@ -23,6 +24,7 @@
 			private var fields:Array;
 			private var crit:Criteria;
 			private var entityManager:EntityManager = EntityManager.getInstance();
+			private var popUp:IndexedSelectListPopUp;
 			
 			private function sanitize(str:String):String
 			{
@@ -46,8 +48,8 @@
 			protected function temizleBtn_clickHandler(event:MouseEvent):void
 			{
 				adiInp.text = soyadiInp.text = devresiInp.text = dogum_gunInp.text = dogum_ayInp.text = ceptelInp.text = "";
-				goryerInp.label = "İli / Birimi";
-				subeInp.label = "Şubesi";
+				goryerInp.prompt = "İli / Birimi";
+				subeInp.prompt = "Şubesi";
 				title = "Devre Rehberi";
 			}
 			
@@ -59,8 +61,8 @@
 				var adi:String = sanitize(adiInp.text);
 				var soyadi:String = sanitize(soyadiInp.text);
 				var devresi:String = sanitize(devresiInp.text);
-				var goryer:String = sanitize(goryerInp.label=="İli / Birimi"?"":goryerInp.label);
-				var sube:String = sanitize(subeInp.label=="Şubesi"?"":subeInp.label);
+				var goryer:String = sanitize(goryerInp.prompt=="İli / Birimi"?"":goryerInp.prompt);
+				var sube:String = sanitize(subeInp.prompt=="Şubesi"?"":subeInp.prompt);
 				var dogum_gun:String = sanitize(dogum_gunInp.text);
 				var dogum_ay:String = sanitize(dogum_ayInp.text);
 				var ceptel:String = sanitize(ceptelInp.text);
@@ -112,45 +114,44 @@
 				title = "Devre Rehberi";
 			}
 			
-			protected function goryerInp_clickHandler(event:MouseEvent):void
+			protected function goryerInp_openHandler(event:DropDownEvent):void
 			{
 				var p:IndexedSelectListPopUp = new IndexedSelectListPopUp();
 				p.show(LookUps.goryer, "u_il").addEventListener(PopUpEvent.CLOSE, function(event:PopUpEvent):void{
 					if(event.commit){
-						goryerInp.label = event.data.u_il;
+						goryerInp.prompt = event.data.u_il;
 					}
 				});
 			}
 			
-			protected function subeInp_clickHandler(event:MouseEvent):void
+			protected function subeInp_openHandler(event:DropDownEvent):void
 			{
 				var p:IndexedSelectListPopUp = new IndexedSelectListPopUp();
 				p.show(LookUps.sube, "u_sube").addEventListener(PopUpEvent.CLOSE, function(event:PopUpEvent):void{
 					if(event.commit){
-						subeInp.label = event.data.u_sube;
+						subeInp.prompt = event.data.u_sube;
 					}
 				});
 			}
-			
 		]]>
 	</fx:Script>
 	<s:actionContent>
-		<s:Button icon="assets/pasta.png" click="pastaBtn_clickHandler(event)"/>
-		<s:Button label="Temizle" click="temizleBtn_clickHandler(event)"/>
-		<s:Button label="Sorgula" click="sorgulaBtn_clickHandler(event)"/>
+		<s:Button id="pastaBtn" icon="assets/pasta.png" click="pastaBtn_clickHandler(event)"/>
+		<s:Button id="temizleBtn" label="Temizle" click="temizleBtn_clickHandler(event)"/>
+		<s:Button id="sorgulaBtn" label="Sorgula" click="sorgulaBtn_clickHandler(event)"/>
 	</s:actionContent>
 	<s:TileGroup left="0" right="0" top="0" height="85" columnWidth="{this.width/4-6}"
 				 horizontalGap="5" orientation="rows" paddingBottom="5" paddingLeft="5"
 				 paddingRight="5" paddingTop="5" requestedColumnCount="4" rowHeight="35"
 				 verticalGap="5">
-		<s:TextInput id="adiInp" prompt="Adı"/>
-		<s:TextInput id="soyadiInp" prompt="Soyadı"/>
-		<s:Button id="goryerInp" label="İli / Birimi" click="goryerInp_clickHandler(event)"/>
-		<s:Button id="subeInp" label="Şubesi" click="subeInp_clickHandler(event)"/>
-		<s:TextInput id="devresiInp" prompt="Devresi" softKeyboardType="number" restrict="[0-9]" maxChars="4"/>
-		<s:TextInput id="ceptelInp" prompt="Telefon No." softKeyboardType="number" restrict="[0-9]"/>
-		<s:TextInput id="dogum_gunInp" prompt="Doğduğu Gün" softKeyboardType="number" restrict="[0-9]" maxChars="2"/>
-		<s:TextInput id="dogum_ayInp" prompt="Doğduğu Ay" softKeyboardType="number" restrict="[0-9]" maxChars="2"/>
+		<s:TextInput id="adiInp" prompt="Adı" skinClass="spark.skins.mobile.TextInputSkin"/>
+		<s:TextInput id="soyadiInp" prompt="Soyadı" skinClass="spark.skins.mobile.TextInputSkin"/>
+		<s:DropDownList id="goryerInp" prompt="İli / Birimi" open="goryerInp_openHandler(event)"><s:layout><s:VerticalLayout requestedRowCount="0"/></s:layout></s:DropDownList>
+		<s:DropDownList id="subeInp" prompt="Şubesi" open="subeInp_openHandler(event)"><s:layout><s:VerticalLayout requestedRowCount="0"/></s:layout></s:DropDownList>
+		<s:TextInput id="devresiInp" prompt="Devresi" softKeyboardType="number" restrict="[0-9]" maxChars="4" skinClass="spark.skins.mobile.TextInputSkin"/>
+		<s:TextInput id="ceptelInp" prompt="Telefon No." softKeyboardType="number" restrict="[0-9]" skinClass="spark.skins.mobile.TextInputSkin"/>
+		<s:TextInput id="dogum_gunInp" prompt="Doğduğu Gün" softKeyboardType="number" restrict="[0-9]" maxChars="2" skinClass="spark.skins.mobile.TextInputSkin"/>
+		<s:TextInput id="dogum_ayInp" prompt="Doğduğu Ay" softKeyboardType="number" restrict="[0-9]" maxChars="2" skinClass="spark.skins.mobile.TextInputSkin"/>
 	</s:TileGroup>
 	<s:List id="list" left="0" right="0" top="85" bottom="0"/>
 </s:View>

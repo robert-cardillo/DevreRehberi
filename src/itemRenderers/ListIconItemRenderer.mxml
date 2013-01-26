@@ -14,7 +14,7 @@
 			
 			private function labelFunc(data:Kisi):String
 			{
-				return data.adi + " " + data.soyadi + " (" + data.devresi + ") #" + data.ceptel;
+				return data.adi + " " + data.soyadi + " (" + data.devresi + ") #" + data.ceptel + "# " + data.dogum_gun + "/" + data.dogum_ay + "/" + data.dogum_yil;
 			}
 			
 			private function msgFunc(data:Kisi):String
