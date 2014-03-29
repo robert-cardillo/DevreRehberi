@@ -15,6 +15,7 @@
 			import nz.co.codec.flexorm.criteria.Criteria;
 			
 			import spark.events.DropDownEvent;
+			import spark.events.IndexChangeEvent;
 			import spark.events.PopUpEvent;
 			
 			import util.LookUps;
@@ -133,6 +134,12 @@
 					}
 				});
 			}
+			
+			protected function list_changeHandler(event:IndexChangeEvent):void
+			{
+				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, "0"+(list.dataProvider[event.newIndex] as Kisi).ceptel);
+			}
+			
 		]]>
 	</fx:Script>
 	<s:actionContent>
@@ -153,5 +160,5 @@
 		<s:TextInput id="dogum_gunInp" prompt="Doğduğu Gün" softKeyboardType="number" restrict="[0-9]" maxChars="2" skinClass="spark.skins.mobile.TextInputSkin"/>
 		<s:TextInput id="dogum_ayInp" prompt="Doğduğu Ay" softKeyboardType="number" restrict="[0-9]" maxChars="2" skinClass="spark.skins.mobile.TextInputSkin"/>
 	</s:TileGroup>
-	<s:List id="list" left="0" right="0" top="85" bottom="0"/>
+	<s:List id="list" left="0" right="0" top="85" bottom="0" change="list_changeHandler(event)"/>
 </s:View>
